@@ -38,6 +38,25 @@ fun isValidInput(input: List<Int>): Boolean {
     return true
 }
 
+// 스트라이크 수 반환
+fun countStrike(user: List<Int>, com: MutableList<Int>): Int {
+    var strike: Int = 0
+    for (i in 0..2) {
+        if (user[i] == com[i]) strike++
+    }
+    return strike
+}
+
+// 볼 수 반환
+fun countBall(user: List<Int>, com: MutableList<Int>): Int {
+    var ball: Int = 0
+    for (i in user) {
+        if (com.contains(i) && (user.indexOf(i) != com.indexOf(i))) ball++
+    }
+    return ball
+}
+
+// 게임 실행
 fun playBaseball() {
     print("숫자 야구 게임을 시작합니다.\n")
     print("숫자를 입력해주세요 : ")
@@ -45,6 +64,8 @@ fun playBaseball() {
     var input: List<Int> = listOf()
     try {
         input = playerNum()
+        print("com: $answer, user: $input\n")
+        print("strike: ${countStrike(input, answer)}, ball: ${countBall(input, answer)}")
     } catch (e: IllegalArgumentException) {
         print(e.message)
     }
