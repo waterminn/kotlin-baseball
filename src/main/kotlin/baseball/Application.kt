@@ -6,6 +6,7 @@ fun main() {
     playBaseball()
 }
 
+// 컴퓨터 숫자 생성
 fun computerNum() : MutableList<Int> {
     val com = mutableListOf<Int>()
     while (com.size < 3) {
@@ -15,18 +16,21 @@ fun computerNum() : MutableList<Int> {
     return com
 }
 
+// 사용자 숫자 입력받기
 fun playerNum(): List<Int> {
     var user: List<Int> = Console.readLine().map { it.toString().toInt() }
 
     if (!user.isNullOrEmpty() && isValidInput(user)) {
         return user
     } else {
-        throw IllegalArgumentException("서로 다른 3자리의 숫자를 입력해주세요.")
+        throw IllegalArgumentException("서로 다른 3자리의 숫자를 입력해주세요. (1-9)")
     }
 }
 
+// 서로 다른 세자리 숫자이면 true
 fun isValidInput(input: List<Int>): Boolean {
     if (input.size != 3) return false
+    else if (input.contains(0)) return false
     for (i in input) {
         val predicate: (Int) -> Boolean = { it == i }
         if (input.count(predicate) > 1) return false
@@ -37,12 +41,11 @@ fun isValidInput(input: List<Int>): Boolean {
 fun playBaseball() {
     print("숫자 야구 게임을 시작합니다.\n")
     print("숫자를 입력해주세요 : ")
-    computerNum()
+    val answer = computerNum()
     var input: List<Int> = listOf()
     try {
         input = playerNum()
     } catch (e: IllegalArgumentException) {
         print(e.message)
     }
-    print("the input was ${input.joinToString("")}")
 }
