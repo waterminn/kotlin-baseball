@@ -2,6 +2,8 @@ package baseball
 import camp.nextstep.edu.missionutils.Randoms
 import camp.nextstep.edu.missionutils.Console
 
+// 게임 종료 여부
+var isOver: Boolean = false
 fun main() {
     playBaseball()
 }
@@ -18,7 +20,9 @@ fun computerNum() : MutableList<Int> {
 
 // 사용자 숫자 입력받기
 fun playerNum(): List<Int> {
+    print("\n숫자를 입력해주세요 : ")
     var user: List<Int> = Console.readLine().map { it.toString().toInt() }
+//    var user: List<Int> = readLine()!!.map { it.toString().toInt() }
 
     if (!user.isNullOrEmpty() && isValidInput(user)) {
         return user
@@ -36,6 +40,41 @@ fun isValidInput(input: List<Int>): Boolean {
         if (input.count(predicate) > 1) return false
     }
     return true
+}
+
+// 비교 결과 출력
+fun compareNumber(user: List<Int>, com: MutableList<Int>) {
+    val ball = countBall(user, com)
+    val strike = countStrike(user, com)
+
+    // 낫싱
+    if (ball == 0 && strike == 0) print("낫싱")
+    else {
+        // 볼
+        when(ball) {
+            0 -> print("")
+            else -> print("${ball}볼")
+        }
+        // 스트라이크
+        when(strike) {
+            0 -> print("")
+            3 -> {
+                print("3스트라이크\n")
+                print("3개의 숫자를 모두 맞히셨습니다! 게임 종료")
+                isOver = true
+//                finishGame()
+            }
+            else -> {
+                if (ball != 0) print(" ")
+                print("${strike}스트라이크")
+            }
+        }
+    }
+}
+
+// 게임 종료 로직
+fun finishGame() {
+
 }
 
 // 스트라이크 수 반환
@@ -58,14 +97,14 @@ fun countBall(user: List<Int>, com: MutableList<Int>): Int {
 
 // 게임 실행
 fun playBaseball() {
-    print("숫자 야구 게임을 시작합니다.\n")
-    print("숫자를 입력해주세요 : ")
+    print("숫자 야구 게임을 시작합니다.")
     val answer = computerNum()
     var input: List<Int> = listOf()
     try {
-        input = playerNum()
-        print("com: $answer, user: $input\n")
-        print("strike: ${countStrike(input, answer)}, ball: ${countBall(input, answer)}")
+        while (!isOver) {
+            input = playerNum()
+            compareNumber(input, answer)
+        }
     } catch (e: IllegalArgumentException) {
         print(e.message)
     }
